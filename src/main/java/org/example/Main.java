@@ -1,5 +1,7 @@
 package org.example;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,6 +25,8 @@ public class Main {
             int exit_switch = 1;
             int cart_choice = 0;
             while(exit_switch == 1) {
+                System.out.println("");
+                System.out.println("수행할 작업을 선택해주세요");
                 for(int i = 0; i<categories.size(); i++){
                     System.out.println(i+1 +
                             ". " +
@@ -36,6 +40,8 @@ public class Main {
                 System.out.println("0. Exit");
                 int main_switch = sc.nextInt();
 
+
+                //메인문 시작
                 switch (main_switch) {
                     case 0:
                         System.out.println("Exit shopping shop");
@@ -246,8 +252,13 @@ public class Main {
                             cart.clearCart();
                         }
                         break;
-                    case 6: //관리자 모드
-                        break;
+//                    case 6: //관리자 모드
+//                        int fail_flag = 0;
+//                        System.out.println("관리자 비밀번호를 입력해주세요");
+//                        while(true){
+//
+//                        }
+//                        break;
                 }
             }
         }
