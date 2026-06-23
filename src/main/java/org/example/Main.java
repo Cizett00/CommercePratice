@@ -1,7 +1,5 @@
 package org.example;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,12 +9,14 @@ import java.util.Scanner;
 public class Main {
     public static class CommerceSystem { //프로그램 비즈니스 로직 클래스
         // 적절한 생성자 선언
+
         public CommerceSystem(List<Category> categories) {
             this.categories = categories;
+            this.managerSystem = new ManagerSystem(categories);
             this.cart = new Cart();
         }
-
         private List<Category> categories;
+        private ManagerSystem managerSystem;
         private Cart cart;
 
         void start() {
@@ -37,6 +37,7 @@ public class Main {
                     System.out.println("4. 장바구니 확인");
                     System.out.println("5. 주문 취소");
                 }
+                System.out.println("6. 관리자 모드");
                 System.out.println("0. Exit");
                 int main_switch = sc.nextInt();
 
@@ -252,18 +253,32 @@ public class Main {
                             cart.clearCart();
                         }
                         break;
-//                    case 6: //관리자 모드
-//                        int fail_flag = 0;
-//                        System.out.println("관리자 비밀번호를 입력해주세요");
-//                        while(true){
-//
-//                        }
-//                        break;
+                    case 6: //관리자 모드
+                        Manager manager = new Manager();
+                        int fail_flag = 0;
+                        sc.nextLine();
+                        while(true){
+                            System.out.println("관리자 비밀번호를 입력해주세요");
+                            String pwd_guess = sc.nextLine();
+                            if(manager.checkPassword(pwd_guess)){
+                                break;
+                            }else{
+                                System.out.println("비밀번호가 틀렸습니다.");
+                                fail_flag++;
+                            }
+                            if(fail_flag==3){
+                                System.out.println("비밀번호를 3회 틀려 프로그램을 종료합니다.");
+                                return;
+                            }
+                        }
+                        managerSystem.start();
+
                 }
             }
         }
 
     }
+
 
     public static class Category { //Product클래스 관리
         // Product 클래스를 List로 관리
@@ -289,6 +304,7 @@ public class Main {
         }
 
     }
+
 
     public static class Product { //개별 상품 정보 ex) Galaxy S24, 1200000, 최신 스마트폰, 50
         // 상품명, 가격, 설명, 재고수량 필드 선언하여 관리
@@ -331,6 +347,8 @@ public class Main {
             this.describe = describe;
         }
     }
+
+
     public static class Cart{
         private List<Product> products;
 
@@ -349,6 +367,164 @@ public class Main {
         }
     }
 
+
+    public static class Manager{
+        private String password = "1234";
+
+        public String getPassword() {
+            return password;
+        }
+        public boolean checkPassword(String pwd_guess){
+            return password.equals(pwd_guess);
+        }
+    }
+
+
+    public static class ManagerSystem{
+        public ManagerSystem(List<Category> categories) {
+            this.categories = categories;
+        }
+        private List<Category> categories;
+
+        void start(){
+            while(true) {
+                Scanner sc = new Scanner(System.in);
+                System.out.println("[ 관리자 모드 ]");
+                System.out.println("1. 상품 추가");
+                System.out.println("2. 상품 수정");
+                System.out.println("3. 상품 삭제");
+                System.out.println("4. 전체 상품 현황");
+                System.out.println("5. 메인으로 돌아가기");
+                int manager_choice = sc.nextInt();
+                switch (manager_choice) {
+                    case 1:
+                        System.out.println("추가할 카테고리를 선택해주세요");
+                        System.out.println("1. 전자제품");
+                        System.out.println("2. 의류");
+                        System.out.println("3. 식품");
+
+                        int categories_choice = sc.nextInt();
+                        sc.nextLine();
+                        if (categories_choice == 1) {
+                            Category electronic = categories.get(0);
+                            System.out.println("[전자제품 카테고리에 상품 추가]");
+                            System.out.print("상품명을 입력해주세요: ");
+                            String newName = sc.nextLine();
+                            System.out.print("상품 설명을 입력해주세요: ");
+                            String newDescribe = sc.nextLine();
+                            System.out.print("상품 가격을 입력해주세요: ");
+                            int newPrice = sc.nextInt();
+                            System.out.print("재고수량을 입력해주세요: ");
+                            int newStock = sc.nextInt();
+                            electronic.addProduct(new Product(newName, newDescribe, newPrice, newStock));
+                        } else if (categories_choice == 2) {
+                            Category cloth = categories.get(1);
+                            System.out.println("[의류 카테고리에 상품 추가]");
+                            System.out.print("상품명을 입력해주세요: ");
+                            String newName = sc.nextLine();
+                            System.out.print("상품 설명을 입력해주세요: ");
+                            String newDescribe = sc.nextLine();
+                            System.out.print("상품 가격을 입력해주세요: ");
+                            int newPrice = sc.nextInt();
+                            System.out.print("재고수량을 입력해주세요: ");
+                            int newStock = sc.nextInt();
+                            cloth.addProduct(new Product(newName, newDescribe, newPrice, newStock));
+                        } else if (categories_choice == 3) {
+                            Category food = categories.get(2);
+                            System.out.println("[식품 카테고리에 상품 추가]");
+                            System.out.print("상품명을 입력해주세요: ");
+                            String newName = sc.nextLine();
+                            System.out.print("상품 설명을 입력해주세요: ");
+                            String newDescribe = sc.nextLine();
+                            System.out.print("상품 가격을 입력해주세요: ");
+                            int newPrice = sc.nextInt();
+                            System.out.print("재고수량을 입력해주세요: ");
+                            int newStock = sc.nextInt();
+                            food.addProduct(new Product(newName, newDescribe, newPrice, newStock));
+                        } else {
+                            System.out.println("범주 내의 카테고리를 선택해주세요");
+                            break;
+                        }
+                        break;
+                    case 2:
+                        System.out.println("수정할 상품명을 입력해주세요");
+                        int search_flag = 0;
+                        sc.nextLine();
+                        String findByName = sc.nextLine();
+                        for(int i = 0; i < categories.size(); i++){
+                            for(int j = 0; j < categories.get(i).getProducts().size(); j++){
+                                if(categories.get(i).getProducts().get(j).getName().equals(findByName)) {
+                                    search_flag++;
+                                    System.out.println("수정하고 싶은 부분을 입력해주세요");
+                                    System.out.println("1. 가격");
+                                    System.out.println("2. 상품설명");
+                                    System.out.println("3. 수량");
+                                    int modify_choice = sc.nextInt();
+                                    switch (modify_choice) {
+                                        case 1:
+                                            System.out.println("수정할 가격을 입력해주세요");
+                                            int modify_price = sc.nextInt();
+                                            categories.get(i).getProducts().get(j).setPrice(modify_price);
+                                            break;
+                                        case 2:
+                                            System.out.println("수정할 상품정보를 입력해주세요");
+                                            sc.nextLine();
+                                            String modify_describe = sc.nextLine();
+                                            categories.get(i).getProducts().get(j).setDescribe(modify_describe);
+                                            break;
+                                        case 3:
+                                            System.out.println("수정할 수량을 입력해주세요");
+                                            int modify_stock = sc.nextInt();
+                                            categories.get(i).getProducts().get(j).setStock(modify_stock);
+                                            break;
+
+                                    }
+                                }
+                                if(search_flag > 0){
+                                    break;
+                                }
+                            }
+                            if(search_flag > 0){
+                                break;
+                            }
+                        }
+                        if(search_flag == 0){
+                            System.out.println("상품을 찾지 못했습니다.");
+                        }
+                        break;
+
+                    case 3:
+                        System.out.println("삭제할 상품명을 입력해주세요");
+                        int delete_flag = 0;
+                        sc.nextLine();
+                        findByName = sc.nextLine();
+                        for(int i = 0; i < categories.size(); i++) {
+                            for (int j = 0; j < categories.get(i).getProducts().size(); j++) {
+                                if (categories.get(i).getProducts().get(j).getName().equals(findByName)) {
+                                    categories.get(i).getProducts().remove(j);
+                                    delete_flag++;
+                                    break;
+                                }
+                                if(delete_flag > 0){
+                                    break;
+                                }
+                            }
+                            if(delete_flag > 0){
+                                break;
+                            }
+                        }
+                        if(delete_flag == 0){
+                            System.out.println("상품을 찾지 못했습니다.");
+                        }
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        return;
+                }
+            }
+        }
+    }
     public class Customer { //손님
         // 고객명, 이메일, 등급 필드 선언하여 관리
         private String name;
@@ -392,6 +568,8 @@ public class Main {
         categories.add(food);
 
         CommerceSystem commerceSystem = new CommerceSystem(categories);
+        ManagerSystem managerSystem = new ManagerSystem(categories);
+
         commerceSystem.start();
 
     }
